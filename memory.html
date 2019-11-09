@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      .doAgain {
+        width: 120px;
+        height: 50px;
+        border: 12px soid lime;
+      }
+      .score {
+        color: rgb(110, 13, 89);
+        font-size: 25px;
+        display: flex;
+        border: 3px dotted aqua;
+        border-radius: 10px;
+        width: 500px;
+      }
+      .playerOne {
+        flex: 1;
+      }
+      .playerTwo {
+        flex: 1;
+      }
+      .gameboard {
+        grid-template-columns: 165px 165px 165px;
+        grid-template-rows: 25% 25% 25% 25%;
+        display: grid;
+        padding-bottom: 40px;
+        width: 500px;
+        height: 560px;
+        background-color: rgb(156, 33, 130);
+        border-radius: 10px;
+      }
+      .otherSide {
+        font-size: 30px;
+        background: rgb(49, 3, 158);
+        padding-top: 20px;
+        min-width: 60%;
+        min-height: 70%;
+        margin: 27px;
+        text-align: center;
+        border-radius: 3px;
+        color: aqua;
+      }
+      .cards {
+        font-size: 30px;
+        color: aqua;
+        padding-top: 20px;
+        background-color: aqua;
+        min-width: 60%;
+        min-height: 70%;
+        margin: 27px;
+        text-align: center;
+        border-radius: 3px;
+      }
+    </style>
+    <div class="score">
+      <div id="playerOne" class="playerOne">PLAYER ONE:</div>
+      <div id="playerTwo" class="playerTwo">PLAYER TWO:</div>
+    </div>
+
+    <div id="gameboard" class="gameboard">
+      <!-- <div
+        onclick="flipCard('card1','one')"
+        id="card1"
+        class="cards otherSide"
+        data-id="one"
+      >
+        ###
+      </div>
+      <div
+        onclick="flipCard('card2', 'one')"
+        id="card2"
+        class="cards otherSide"
+        data-id="one"
+      >
+        ###
+      </div>
+      <div
+        onclick="flipCard('card3', 'two')"
+        id="card3"
+        class="cards otherSide"
+        data-id="card3"
+      >
+        $$$
+      </div>
+      <div
+        onclick="flipCard('card4', 'two')"
+        id="card4"
+        class="cards otherSide"
+        data-id="card4"
+      >
+        $$$
+      </div>
+      <div
+        onclick="flipCard('card5', 'three')"
+        id="card5"
+        class="cards otherSide"
+        data-id="five"
+      >
+        ***
+      </div>
+      <div
+        onclick="flipCard('card6', 'three')"
+        id="card6"
+        class="cards otherSide"
+        data-id="six"
+      >
+        ***
+      </div>
+      <div
+        onclick="flipCard('card7', 'four')"
+        id="card7"
+        class="cards otherSide"
+        data-id="seven"
+      >
+        :(
+      </div>
+      <div
+        onclick="flipCard('card8', 'four')"
+        id="card8"
+        class="cards otherSide"
+        data-id="eight"
+      >
+        :(
+      </div>
+      <div
+        onclick="flipCard('card9', 'five')"
+        id="card9"
+        class="cards otherSide"
+        data-id="nine"
+      >
+        :)
+      </div>
+      <div
+        onclick="flipCard('card10', 'five')"
+        id="card10"
+        class="cards otherSide"
+        data-id="ten"
+      >
+        :)
+      </div>
+      <div
+        onclick="flipCard('card11', 'six')"
+        id="card11"
+        class="cards otherSide"
+        data-id="eleven"
+      >
+        @@@
+      </div>
+      <div
+        onclick="flipCard('card12', 'six')"
+        id="card12"
+        class="cards otherSide"
+        data-id="twelve"
+      >
+        @@@
+      </div> -->
+    </div>
+    <button onclick="reset()" class="doAgain">RESET</button>
+  </body>
+  <script>
+    var winnerMessage = '';
+    var endgame = 0;
+    var isPlayerOne = true;
+    var playerOne = 0;
+    var playerTwo = 0;
+    var firstId;
+    var firstCard = '';
+    var secondCard = '';
+    var isFirstClick = 0;
+    var randomCharacter = '';
+    var char_list = '!@#$%^&*+_-=|[]{}<>/ABCDEFGHJKLMNOPQRSTUVWXYZ';
+    let cardsArray = [];
+    let newRando = true;
+    let matchId;
+    let nextDiv = '';
+
+    for (let i = 1; i < 13; i++) {
+      let proxyI = i;
+      if (newRando === true) {
+        matchId = Math.floor(Math.random() * 12) + 1;
+        randomCharacter = char_list.charAt(
+          Math.floor(Math.random() * char_list.length)
+        );
+        char_list.split(`${randomCharacter}`).join('');
+        console.log(randomCharacter);
+      }
+      proxyI = i;
+      nextDiv = `<div onclick="flipCard('card${proxyI}','${matchId}')" id="card${i}" class="cards otherSide">${randomCharacter}${randomCharacter}${randomCharacter}
+          </div>`;
+      cardsArray.push(nextDiv);
+      console.log(cardsArray);
+      newRando = !newRando;
+    }
+    for (let i = cardsArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i);
+      const temp = cardsArray[i];
+      cardsArray[i] = cardsArray[j];
+      cardsArray[j] = temp;
+    }
+
+    for (let i = 0; i < 12; i++) {
+      let board = document.getElementById('gameboard');
+      board.innerHTML += cardsArray[i];
+    }
+
+    function flipCard(id, matchId) {
+      console.log('INVOKEDDDDDDDD');
+      console.log('MAATCHiDDDD  ' + matchId);
+      console.log(id);
+      console.log(document.getElementById(`"card${id}"`));
+      if (id === firstId && isFirstClick === 1) {
+        alert('PICK A DIFFERENT CARD!!!!!');
+      } else {
+        console.log('MATCHID:' + matchId);
+        var element = document.getElementById(id);
+        console.log(element.id + 'ID BEGIN');
+        element.classList.toggle('cards');
+        if (isFirstClick === 0) {
+          console.log('FIRST CLICK');
+          firstId = id;
+          firstCard = matchId;
+          console.log(firstCard);
+          isFirstClick++;
+        } else if (isFirstClick === 1) {
+          console.log('SECOND CLICK');
+          var secondCard = matchId;
+          if (firstCard === secondCard) {
+            setTimeout(function() {
+              element.classList.remove('cards');
+              element.style.color = 'rgb(156, 33, 130)';
+              element.innerHTML = '';
+              element.classList.remove('otherSide');
+              var x = document.getElementById(`${firstId}`);
+              x.style.color = 'rgb(156, 33, 130)';
+              x.classList.remove('cards');
+              x.classList.remove('otherSide');
+            }, 1600);
+            if (isPlayerOne) {
+              playerOne++;
+              var pOne = document.getElementById('playerOne');
+              pOne.innerHTML = `PLAYER ONE: ${playerOne}`;
+            } else {
+              playerTwo++;
+              var pTwo = document.getElementById('playerTwo');
+              pTwo.innerHTML = `PLAYER TWO: ${playerTwo}`;
+            }
+            if (endgame === 5) {
+              if (playerOne > playerTwo) {
+                winnerMessage = 'PLAYER ONE WINS!!!!!!!!!!!!';
+                var pOne = document.getElementById('playerOne');
+                pOne.innerHTML = winnerMessage;
+                var pTwo = document.getElementById('playerTwo');
+                pTwo.innerHTML = '';
+              } else {
+                winnerMessage = 'PLAYER TWO WINS!!!!!!!!!!!!';
+                var pTwo = document.getElementById('playerTwo');
+                pTwo.innerHTML = winnerMessage;
+                var pOne = document.getElementById('playerOne');
+                pOne.innerHTML = '';
+              }
+            }
+            endgame++;
+          } else {
+            isPlayerOne = !isPlayerOne;
+            setTimeout(function() {
+              element.classList.toggle('cards');
+              var x = document.querySelector(`#${firstId}`);
+              x.classList.toggle('cards');
+            }, 1600);
+          }
+          isFirstClick = 0;
+          console.log('ISFIRSTCLICK RESET');
+          firstCard = '';
+          console.log('FIRSTCARD RESET');
+          secondCard = '';
+          console.log('SECONDCARD RESET');
+        }
+      }
+    }
+
+    function reset() {
+      console.log('RESETEDEDEDEDED');
+      document.location.reload();
+    }
+  </script>
+</html>
+
+<!-- <img src="bee.jpg" height="60px" width="40px" /> -->
